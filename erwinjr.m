@@ -2774,115 +2774,52 @@ data.FoMmatrix = zeros(length(r2),length(r3));
 counter = 1;
 for q2 = 1:length(r2)
     for q3 = 1:length(r3)
-%         for q4 = r4
-%            for q5 = r5
-%                for q6 = r6
-%                    for q7 = r7
-%                        for q8 = r8
-                            data.wellWidths(2) = r2(q2);
-                            data.wellWidths(3) = r3(q3);
-%                             data.wellWidths(22) = q4;
-%                            data.wellWidths(27) = q5;
-%                            data.wellWidths(28) = q6;
-%                            data.wellWidths(29) = q7;
-%                            data.wellWidths(30) = q8;
-                            guidata(hObject,handles); setappdata(handles.hErwinJr,'data',data);
-                            
-                            refreshRegionList(hObject,eventdata,handles);
-                            runButton_Callback(hObject, eventdata, handles);
-                            data=getappdata(handles.hErwinJr,'data');
-                            
-                           
-%                            E31 = data.EigenE(data.ARstateNums(5)) - data.EigenE(data.ARstateNums(1));  % 30 < E31 < 55
-%                            E53 = data.EigenE(data.ARstateNums(5)) - data.EigenE(data.ARstateNums(3));  % 30 < E53 < 55
-%                             E54 = data.EigenE(13) - data.EigenE(9);  % 
-%                             E65 = data.EigenE(17) - data.EigenE(13);  % E65 > 250
-%                            E75 = data.EigenE(data.ARstateNums(7)) - data.EigenE(data.ARstateNums(5));  % E75 > 250
-%                            E76 = data.EigenE(data.ARstateNums(7)) - data.EigenE(17);  % E76 < 12
-%                            E87 = data.EigenE(data.ARstateNums(8)) - data.EigenE(data.ARstateNums(7));  % E87 > 50
-                            E32 = data.EigenE(4) - data.EigenE(3); 
+        data.wellWidths(2) = r2(q2);
+        data.wellWidths(3) = r3(q3);
 
+        guidata(hObject,handles); setappdata(handles.hErwinJr,'data',data);
 
-                            %stopped here
-%                           if E31 > 30 && E31 < 55 && E53 > 30 && E53 > 55 && E65 > 250 && E75 > 250 && E76 < 12 && E87 > 50
-%                                 d54 = dipole(data.Psi(:,13), data.EigenE(13), data.Psi(:,9), data.EigenE(9),...
-%                                       data.xpoints,data.Vcx,data.Mcx,data.Egx);
-%                                 dsqr = d54^2;
-                                
-%                                 d32 = dipole(data.Psi(:,4), data.EigenE(4), data.Psi(:,3), data.EigenE(3),...
-%                                       data.xpoints,data.Vcx,data.Mcx,data.Egx);
-%                                 
-%                                 t43 = lifetime(data.Psi(:,4), data.EigenE(4), data.Psi(:,3), data.EigenE(3),...
-%                                       data.xpoints, data.xres, data.Vcx, data.Mcx, data.Egx, data.Temp, data.epsstatic,...
-%                                       data.epshighf, data.hwlo, data.kp0);
-%                                   
-%                                 t4 = 0;
-%                                 for q = data.ARstateNums(4)-1:-1:4
-%                                     t4 = t4 + 1/lifetime(data.Psi(:,data.ARstateNums(4)), data.EigenE(data.ARstateNums(4)), data.Psi(:,q), data.EigenE(q),...
-%                                         data.xpoints, data.xres, data.Vcx, data.Mcx, data.Egx, data.Temp, data.epsstatic,...
-%                                         data.epshighf, data.hwlo, data.kp0);
-%                                 end
-%                                 t4 = 1/t4;
-%                                 t3 = 0;
-%                                 for q = data.ARstateNums(5)-1:-1:4
-%                                     t3 = t3 + 1/lifetime(data.Psi(:,data.ARstateNums(3)), data.EigenE(data.ARstateNums(3)), data.Psi(:,q), data.EigenE(q),...
-%                                         data.xpoints, data.xres, data.Vcx, data.Mcx, data.Egx, data.Temp, data.epsstatic,...
-%                                         data.epshighf, data.hwlo, data.kp0);
-%                                 end
-%                                 t3 = 1/t3;
-%                                 
-%                                 FoM = t4 * (1-t4/t43) * d32.^2 .* E32
+        refreshRegionList(hObject,eventdata,handles);
+        runButton_Callback(hObject, eventdata, handles);
+        data=getappdata(handles.hErwinJr,'data');
 
+        E32 = data.EigenE(4) - data.EigenE(3); 
 
-lt = lifetime(data.Psi(:,4), data.EigenE(4), data.Psi(:,3), data.EigenE(3),...
+        lt = lifetime(data.Psi(:,4), data.EigenE(4), data.Psi(:,3), data.EigenE(3),...
           data.xpoints, data.xres, data.Vcx, data.Mcx, data.Egx, data.Temp, data.epsstatic,...
           data.epshighf, data.hwlo, data.kp0);
 
-lt1 = 0;
-for q = 3-1:-1:1
-        lftme = lifetime(data.Psi(:,3), data.EigenE(3), data.Psi(:,q), data.EigenE(q),...
-            data.xpoints, data.xres, data.Vcx, data.Mcx, data.Egx, data.Temp, data.epsstatic,...
-            data.epshighf, data.hwlo, data.kp0);
-        if isfinite(lftme)
-            lt1 = lt1 + 1/lftme;
-        else
+        lt1 = 0;
+        for q = 3-1:-1:1
+                lftme = lifetime(data.Psi(:,3), data.EigenE(3), data.Psi(:,q), data.EigenE(q),...
+                    data.xpoints, data.xres, data.Vcx, data.Mcx, data.Egx, data.Temp, data.epsstatic,...
+                    data.epshighf, data.hwlo, data.kp0);
+                if isfinite(lftme)
+                    lt1 = lt1 + 1/lftme;
+                else
+                end
         end
-end
-lt1 = 1/lt1;
+        lt1 = 1/lt1;
 
-lt2 = 0;
-for q = 4-1:-1:1
-    lftme = lifetime(data.Psi(:,4), data.EigenE(4), data.Psi(:,q), data.EigenE(q),...
-            data.xpoints, data.xres, data.Vcx, data.Mcx, data.Egx, data.Temp, data.epsstatic,...
-            data.epshighf, data.hwlo, data.kp0);
-        if isfinite(lftme)
-            lt2 = lt2 + 1/lftme;
-        else
+        lt2 = 0;
+        for q = 4-1:-1:1
+        lftme = lifetime(data.Psi(:,4), data.EigenE(4), data.Psi(:,q), data.EigenE(q),...
+                data.xpoints, data.xres, data.Vcx, data.Mcx, data.Egx, data.Temp, data.epsstatic,...
+                data.epshighf, data.hwlo, data.kp0);
+            if isfinite(lftme)
+                lt2 = lt2 + 1/lftme;
+            end
         end
-end
-lt2 = 1/lt2;
-
-
-dp = dipole(data.Psi(:,4), data.EigenE(4), data.Psi(:,3), data.EigenE(3),...
-        data.xpoints,data.Vcx,data.Mcx,data.Egx); 
+        lt2 = 1/lt2;
+        dp = dipole(data.Psi(:,4), data.EigenE(4), data.Psi(:,3), data.EigenE(3),...
+            data.xpoints,data.Vcx,data.Mcx,data.Egx); 
     
-FoM = lt2 * (1 - lt1/lt) * dp^2
+        FoM = lt2 * (1 - lt1/lt) * dp^2
 
+        data.FoMmatrix(q2,q3) = FoM .* E32;
 
-                                data.FoMmatrix(q2,q3) = FoM .* E32;
-                                
-%                                 fprintf(fid,'%d\t%d\t%d\t%g\t%g\t%g\n',...
-%                                     q2,q3,q4,E54,E65,FoM);
-%                                 sprintf('%d\t%d\t%d\t%g\t%g\t%g\n',...
-%                                     q2,q3,q4,E54,E65,FoM)                               
-%                            end
-                            counter = counter+1;
-                            set(handles.getStates,'String',num2str(counter));
-%                        end
-%                    end
-%                end
-%            end
-%         end
+        counter = counter+1;
+        set(handles.getStates,'String',num2str(counter));
     end
 end
 
@@ -2911,62 +2848,229 @@ data = getappdata(handles.hErwinJr,'data');
 states = str2num(get(handles.getStates,'String'))';
 states = sort(states);
 
-% l = {};
-% while (length(s) > 0)
-%     [t,s] = strtok(s,d);
-%     l = {l{:}, t};
-% end
+%----Ching-Yu added interface roughness intersuband scattering-------------
+% Parameters
+roughmean = 0.15 * (10 ^ -9); % interface roughness mean height, unit meter, 0.15 nm
+correllength = 60 * (10 ^ -10); % correlation length, unit meter, 60 angstrom
+roughfactor = pi .* (data.McE .* data.me) ./ (data.hbar ^ 2) .* (correllength ^ 2) .* (roughmean ^ 2); % matrix of the factor of intersubband scattering due to interface roughness, pi*effmass/(hbar^2)*(correllength^2)*(roughmean^2), matrix of states
+deltaU = 520 * (10 ^ -3) * data.e0;  % band offset, 520meV, unit J
 
-lt = lifetime(data.Psi(:,states(2)), data.EigenE(states(2)), data.Psi(:,states(1)), data.EigenE(states(1)),...
-          data.xpoints, data.xres, data.Vcx, data.Mcx, data.Egx, data.Temp, data.epsstatic,...
-          data.epshighf, data.hwlo, data.kp0);
-
-lt1 = 0;
-for q = states(1)-1:-1:1
-    if states(1) - q < 12 || abs(dipole(data.Psi(:,states(1)), data.EigenE(states(1)), data.Psi(:,q), data.EigenE(q),...
-            data.xpoints,data.Vcx,data.Mcx,data.Egx)) > 0.05
-        lftme = lifetime(data.Psi(:,states(1)), data.EigenE(states(1)), data.Psi(:,q), data.EigenE(q),...
-            data.xpoints, data.xres, data.Vcx, data.Mcx, data.Egx, data.Temp, data.epsstatic,...
-            data.epshighf, data.hwlo, data.kp0);
-        if isfinite(lftme)
-            lt1 = lt1 + 1/lftme;
-        else
-        end
-   end
+% Calculate each state norm
+statesNum = size(data.Psi,2);
+for j = 1 : statesNum
+    normalPsi(j) = data.Psi(:,j)' * data.Psi(:,j);
 end
-lt1 = 1/lt1;
+normalPsi = normalPsi * data.xres * (10 ^-10);
 
-lt2 = 0;
-for q = states(2)-1:-1:1
-    if (states(2) - q < 12 || abs(dipole(data.Psi(:,states(2)), data.EigenE(states(2)), data.Psi(:,q), data.EigenE(q),...
-            data.xpoints,data.Vcx,data.Mcx,data.Egx)) > 0.05) && data.EigenE(states(2)) - data.EigenE(q) > 0.040
-        lftme = lifetime(data.Psi(:,states(2)), data.EigenE(states(2)), data.Psi(:,q), data.EigenE(q),...
-            data.xpoints, data.xres, data.Vcx, data.Mcx, data.Egx, data.Temp, data.epsstatic,...
-            data.epshighf, data.hwlo, data.kp0);
-        if isfinite(lftme)
-            lt2 = lt2 + 1/lftme;
-        else
-        end
+% Find the interface positions and save in an array interfacePosi, starting
+% from the first period end to the third period end. Then save the corresponding index to interfaceIndex 
+structure = data.wellWidths';
+wellsNum = size(structure , 2);
+interfacePosi(1) = 0;  % Starting from the interface of the end of the first period
+count = 2;
+for i = 1 : 3
+    for j = 1 : wellsNum
+      interfacePosi(count) = interfacePosi(count - 1) + structure(j);
+      count = count + 1;
     end
 end
-lt2 = 1/lt2;
+interfacePosi(1) = 1;
+interfaceIndex = interfacePosi ./ data.xres; % the index of interfaces between InGaAs and InAlAs
 
+% Save the probability on interface in array IRpsi, IRpsi(interfaceorder, states)  
+interfaceNum = size(interfaceIndex , 2);
+for i = 1 : interfaceNum
+    IRpsi(i, :) = data.Psi(interfaceIndex(i), :); 
+end
+
+wavefacsqua = 2 * data.McE(states(2)) .* data.me * (data.EigenE(states(2)) - data.EigenE(states(1))) * data.e0 / (data.hbar ^ 2);
+IRinverself = roughfactor(states(2)) * (deltaU ^ 2) * ((IRpsi(:,states(2)) .^ 2)' * (IRpsi(:,states(1)) .^ 2)) / (normalPsi(states(2)) * normalPsi(states(1))) * exp(-1 * (correllength ^ 2) * (wavefacsqua) / 4) / data.hbar; % Yenting's thesis eqn 4.11
+tauIRul = 1 / IRinverself; % unit s
+tauIRul = tauIRul * (10 ^ 12); % unit ps
+%----Ching-Yu added end---------------------------------------------------
+
+lftme = 0;
+lt = 0;
+lt1 = 0;
+lto = 0;
+lt2 = 0;
+ltuo = 0;
+%-------Ching-Yu, parameters definition-----------------
+%  There are two states being chosen, one is defined as upper and the other
+%  one is defined as the lower 
+%   lt = LO phonon scattering time from the upper level to the lower
+%   lt1 = inverse lifetime of the lower level before considering the
+%         scattering from the lower level to the higher energy levels
+%   lt1o = lifetime of the lower level, inverse of lt1, without considering
+%          scattering into higer levels
+%   lt1 = inverse lifetime of the lower level considered scattering to higher levels 
+%   lt2 = invrse upper level lifetime not considering scattering to higher levels  
+%   ltuo = the upper level lifetime not considering scattering to higher
+%          levels
+%   lt2 = lifetime considered scattering to higher levels
+
+%Ching-Yu
+phononnum = (exp(data.hwlo / (data.kb * data.Temp)) - 1) ^ (-1);    % Ching-Yu add, phonon population number, Bastard eqn(15), boson distribution of LO phonon,  hwlo=0.034 eV for III-V, data.kb unit eV/K
+
+assignin('base', 'phononnum', phononnum)
+% use lifetime calculation again lt = lifetime = LO scattering time from the upper level to the lower level
+ltloscatt = lifetime(data.Psi(:, states(2)), data.EigenE(states(2)), data.Psi(:, states(1)), data.EigenE(states(1)),...
+           data.xpoints, data.xres, data.Vcx, data.Mcx, data.Egx, data.Temp, data.epsstatic,...
+           data.epshighf, data.hwlo, data.kp0);  % Ching-Yu Change lifetime into lifetim1 function
+
+ lt1 = 0;   % Ching-Yu: summing up. lt1 = lower level lifetime, it only considers scattering to the energy levels in the lower order but using new function liftime1, infact the order of the energy levels is lower energy to higher energy
+ 
+ % 20140424 Ching-Yu added
+
+ lt(1) = 0;
+ lt(2) = 0;
+ ltIR(1) = 0;
+ ltIR(2) = 0;
+ ltwIR(1) = 0;
+ ltwIR(2) = 0;
+ ltn(1) = 0;
+ ltn(2) = 0;
+ lto(1) = 0;
+ lto(2) = 0;
+
+ for i = 1 : 2
+    order = 1;
+    lftme = 0;
+    lowerLimit = states(i) - 21;
+    if lowerLimit < 0
+        lowerLimit = 1;
+    end
+    
+    for q = (states(i) - 1) : -1 : lowerLimit  %Ching-Yu: states(1) is the chosen lower level, in the "for loop", it sum up the scattering lifetime to the lower levels
+       if abs(dipole(data.Psi(:, states(i)), data.EigenE(states(i)), data.Psi(:, q), data.EigenE(q),...  % Ching-Yu: if states are in the order of less than 12 difference to the lower laser level and if the dipole moment is larger than 0.05, then consider its scattering
+             data.xpoints,data.Vcx,data.Mcx,data.Egx)) > 0.05
+            lftme = lifetime(data.Psi(:, states(i)), data.EigenE(states(i)), data.Psi(:, q), data.EigenE(q),...
+               data.xpoints, data.xres, data.Vcx, data.Mcx, data.Egx, data.Temp, data.epsstatic,...
+               data.epshighf, data.hwlo, data.kp0); 
+           
+            wavefacsqua = 2 * data.McE(states(i)) .* data.me * (data.EigenE(states(i)) - data.EigenE(q)) * data.e0 / (data.hbar ^ 2);
+            IRinverself = roughfactor(states(i)) * (deltaU ^ 2) * ((IRpsi(:, states(i)) .^ 2)' * (IRpsi(:, q) .^ 2)) / (normalPsi(states(i)) * normalPsi(q)) * exp(-1 * (correllength ^ 2) * (wavefacsqua) / 4) / data.hbar; % Yenting's thesis eqn 4.11
+            tauIR = 1 / IRinverself * (10 ^ 12); % unit ps
+                     
+            if isfinite(lftme)
+               lt(i) = lt(i) + (1/lftme); % sum LO phonon scattering rate.
+               ltIR(i) = ltIR(i) + (1 / tauIR);  % sum interface roughness scattering rate.
+               ltwIR(i) = ltwIR(i) + (1 / lftme) + (1 / tauIR); % sum LO phonon and interface roughness scattering rate. 
+            end
+              
+            if i == 1 % lower level
+              lftimecal1(order,1) = states(i);   % from the lower level
+              lftimecal1(order,2) = q;           % to the q level
+              lftimecal1(order,3) = lftme;       % LO phonon scattering time from the lower level to the q level, unit ps
+              lftimecal1(order,4) = lt(i);       % LO phonon scattering rate summansion of the lower level from depopulation level to the q level, unit  (1/ps) 
+              lftimecal1(order,5) = 1./lt(i);    % LO phonon scattering lifetime summansion of the lower level from the depopulation level to the q level, unit ps
+              lftimecal1(order,6) = tauIR;       % IR intersubband scattering time from the lower level to the q level, unit ps
+              lftimecal1(order,7) = ltIR(i);      % sum of IFR scattering rate, unit (1/ps)
+              lftimecal1(order,8) = ltwIR(i);    % LO phonon and IR scattering rate summansion of the lower level from the depopulation level to the q level, unit (ps) 
+              lftimecal1(order,9) = 1./ltwIR(i); % LO phonon and IR scattering lifetime summansion of the lower level from the depopulation level to the q level, unit (1/ps) 
+            else % upper level, same process as above
+              lftimecal2(order,1) = states(i);
+              lftimecal2(order,2) = q;
+              lftimecal2(order,3) = lftme;
+              lftimecal2(order,4) = lt(i);
+              lftimecal2(order,5) = 1./lt(i);
+              lftimecal2(order,6) = tauIR ;
+              lftimecal2(order,7) = ltIR(i);      % sum of IFR scattering rate, unit (1/ps)
+              lftimecal2(order,8) = ltwIR(i);
+              lftimecal2(order,9) = 1./ltwIR(i);
+            end
+       end
+       order = order + 1;
+    end
+  
+    % Ching-Yu add, considering scattering to higher energy level
+    lto(i) = 1 ./ lt(i);    % Ching-Yu: inverse sum up inversed lifetime, lower laser level lifetime before considering scattering to higher energy level
+    statesNum = size(data.Psi, 2);
+    upperLimit = states(i) + 21;
+    if upperLimit > statesNum
+        upperLimit = statesNum;
+    end
+    
+    for q = (states(i) + 21) : -1 : upperLimit
+        if abs(dipole(data.Psi(:,states(i)), data.EigenE(states(i)), data.Psi(:,q), data.EigenE(q),...
+             data.xpoints,data.Vcx,data.Mcx,data.Egx)) > 0.05
+             lftme = lifetime(data.Psi(:,q), data.EigenE(q), data.Psi(:,states(i)), data.EigenE(states(i)),...
+             data.xpoints, data.xres, data.Vcx, data.Mcx, data.Egx, data.Temp, data.epsstatic,...
+             data.epshighf, data.hwlo, data.kp0);   % Ching-Yu: Ei,Ej switch
+             if isfinite(lftme)
+                 lt(i) = lt(i) + (1 / lftme) / (1 + phononnum) * (phononnum);   % Ching-Yu add factor (phononnum), Bastard eqn(15), the lifetime program always calculate from higher to lower, so to transfer need to times back the factor    
+                 ltwIR(i) = ltwIR(i) + (1 / lftme) / (1 + phononnum) * (phononnum);
+             end
+             
+             if i==1 % for the lower level
+                 lftimecal1(order,1) = states(i);
+                 lftimecal1(order,2) = q;
+                 lftimecal1(order,3) = lftme;
+                 lftimecal1(order,4) = lt(i);
+                 lftimecal1(order,5) = 1./lt(i);
+             else  % for the upper level
+                 lftimecal2(order,1) = states(i);   % from the upper level
+                 lftimecal2(order,2) = q;           % to the q level
+                 lftimecal2(order,3) = lftme;       % LO phonon scattering time from the upper level to the q level, unit ps
+                 lftimecal2(order,4) = lt(i);       % LO phonon scattering rate summansion of the upper level from the (upper+24) level to the q level, unit ps 
+                 lftimecal2(order,5) = 1./lt(i);    % LO phonon scattering lifetime summansion of the upper level from the (upper+24) level to the q level, unit (1/ps)        
+             end
+            
+             order = order + 1;
+        end
+    end
+    
+    ltn(i) = 1 ./ lt(i);
+    ltnIR(i) = 1 ./ ltIR(i);
+    ltnwIR(i) = 1 ./ ltwIR(i);
+ end 
+
+%--------------------------------------------------------------------------
+
+assignin('base', 'lftimecal1', lftimecal1)
+save('lftimecal1.txt','lftimecal1','-ascii')
+type('lftimecal1.txt')
+
+assignin('base', 'lftimecal2', lftimecal2)
+save('lftimecal2.txt','lftimecal2','-ascii')
+type('lftimecal2.txt')
 
 dp = dipole(data.Psi(:,states(2)), data.EigenE(states(2)), data.Psi(:,states(1)), data.EigenE(states(1)),...
         data.xpoints,data.Vcx,data.Mcx,data.Egx); 
-    
-FoM = lt2 * (1 - lt1/lt) * dp^2;
-FoMstar = FoM * (data.EigenE(states(2))-data.EigenE(states(1))); % in cm / A
+ 
+ taueff = ltn(2).* (1 - ltn(1) ./ ltloscatt);    
+ FoM = taueff * dp ^ 2;    % Ching-Yu: FoM is (effectivelifetime * (dipolemoment ^ 2)) = upperlifetime * (1 - lowerlifetime / LOscatteringtime upperlower)
+ taueffIR = ltnIR(2).* (1 - ltnIR(1) ./ tauIRul);
+ FoMIR = taueffIR * dp ^ 2;  % only considering IFR scattering 
+ tscattul = (1 /((1 / ltloscatt) + (1 / tauIRul)));
+ taueffwIR = ltnwIR(2).* (1 - ltnwIR(1) ./ tscattul);
+ FoMwIR = taueffwIR * dp ^ 2;  % include interface roughness intersubband scattering 
+ FoMo = lto(2).* (1 - lto(1) ./ ltloscatt) * dp ^ 2;   % Ching-Yu add, original FoM without considering scattering to higher energy levels
+ FoMstar = FoM * (data.EigenE(states(2)) - data.EigenE(states(1))); % in cm / A
 
-showString{1} = ['E' num2str(states(2)) num2str(states(1)) ' = ' num2str((data.EigenE(states(2))-data.EigenE(states(1)))*1e3,'%10.3g')];    
-showString{2} = ['z' num2str(states(2)) num2str(states(1)) ' = ' num2str(dp,'%10.3g')];
-showString{3} = ['t' num2str(states(2)) num2str(states(1)) ' = ' num2str(lt,'%10.3g')];
-showString{4} = ['t' num2str(states(2)) ' = ' num2str(lt2,'%10.3f')];
-showString{5} = ['t' num2str(states(1)) ' = ' num2str(lt1,'%10.3f')];
-showString{6} = ['FoM = ' num2str(FoM,'%10.0f')];
-showString{7} = ['FoM* = ' num2str(FoMstar,'%10.1f')];
+showString{1} = ['E' num2str(states(2)) num2str(states(1)) ' = ' num2str((data.EigenE(states(2)) - data.EigenE(states(1))) * 1e3,'%10.3g')];    %energy difference
+showString{2} = ['z' num2str(states(2)) num2str(states(1)) ' = ' num2str(dp,'%10.3g')]; % dipole moment
+showString{3} = ['t' num2str(states(2)) num2str(states(1)) ' = ' num2str(ltloscatt,'%10.3g')];  % LO scattering time from upper to lower
+showString{4} = ['tIR' num2str(states(2)) num2str(states(1)) ' = ' num2str(tauIRul,'%10.3g')]; % Intersubband interface roughness scattering time from upper to lower
+showString{5} = ['twIR' num2str(states(2)) num2str(states(1)) ' = ' num2str(tscattul,'%10.3g')];
+showString{6} = ['t' num2str(states(2)) ' = ' num2str(ltn(2),'%10.3f')]; % upper lifetime, only considering LO phonon scattering
+showString{7} = ['t' num2str(states(1)) ' = ' num2str(ltn(1),'%10.3f')]; % lower lifetime, only considering LO phonon scattering
+showString{8} = ['teff' num2str(states(2)) num2str(states(1)) ' = ' num2str(taueff,'%10.3g')];
+showString{9} = ['tIR' num2str(states(2)) ' = ' num2str(ltnIR(2),'%10.3f')]; % upper lifetime, considering IFR scattering
+showString{10} = ['tIR' num2str(states(1)) ' = ' num2str(ltnIR(1),'%10.3f')]; % lower lifetime, considering IFR scattering
+showString{11} = ['teffIR' num2str(states(2)) num2str(states(1)) ' = ' num2str(taueffIR,'%10.3g')];
+showString{12} = ['twIR' num2str(states(2)) ' = ' num2str(ltnwIR(2),'%10.3f')]; % upper lifetime, considering IFR and LO phonon scattering
+showString{13} = ['twIR' num2str(states(1)) ' = ' num2str(ltnwIR(1),'%10.3f')]; % lower lifetime, considering IFR and LO phonon scattering
+showString{14} = ['teffwIR' num2str(states(2)) num2str(states(1)) ' = ' num2str(taueffwIR,'%10.3g')];
+showString{15} = ['FoM = ' num2str(FoM,'%10.0f')];
+showString{16} = ['FoMIR = ' num2str(FoMIR,'%10.0f')];
+showString{17} = ['FoMwIR = ' num2str(FoMwIR,'%10.0f')];
+showString{18} = ['FoM* = ' num2str(FoMstar,'%10.1f')];
 
-
+showString{19} = ['t2o' num2str(states(1)) ' = ' num2str(lto(2),'%10.3f')];  %Ching-Yu Add
+showString{20} = ['t1o' num2str(states(2)) ' = ' num2str(lto(1),'%10.3f')];  %Ching-Yu Add
+showString{21} = ['FoMo = ' num2str(FoMo,'%10.0f')];
+% lifetime calculated end
 
 set(handles.stateinfoDisplay,'BackgroundColor','white');
 set(handles.stateinfoDisplay,'String',showString);
