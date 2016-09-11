@@ -49,7 +49,8 @@
  * Refraction and Modified by Ching-Yu Chen, 6 Sep 2016
  * =============================================================
  */
-
+#include <ctime>
+using namespace std;
 #include "mex.h"
 #include <iostream>
 #include <math.h>
@@ -81,52 +82,66 @@ void lifetime(double * Psii, double * EigenEi, double * Psij, double * EigenEj,
     double m0 = 9.109E-31;
     double eps0 = 8.85E-12;
     
-    //generic counters
-    int q = 0, m = 0, n = 0;
- 
     //Phonon Emission calc
     // Given the zero electric field mass(x), which is only material dependence over the space, here we need to calculate the effective mass after applying the electric field.
     // The ion electron interaction due to the ion motion caused by the electric field is treated as purterbation. Applying the kp theory, one can find the energy dependent of effective mass.
     // But don't we always assume that k = 0?
-    double dmi, dmj;  // effective mass differentials
-    for(q = 0; q < xpoints; q++)
-    {
-        if (*EigenEi > Vcx[q]) {
-            dmi = Mcx[q] * (1 + ((*EigenEi - hwlo) - Vcx[q]) / Egx[q]) * (deltax * Psii[q] * Psii[q]); // based on kp approximation. equation (3.1.14), (3.1.26), book quatum cascade laser, Jerome
-        } else {
-            dmi = Mcx[q] * (1 - (Vcx[q] - (*EigenEi - hwlo)) / Egx[q]) * (deltax * Psii[q] * Psii[q]);
-        }
+  
+    double dmi;  // effective mass differentials
+    for (int i = 0; i < xpoints; i++) {
+        dmi = Mcx[i] * (1 + ((*EigenEi - hwlo) - Vcx[i]) / Egx[i]) * (deltax * Psii[i] * Psii[i]); // based on kp approximation. equation (3.1.14), (3.1.26), book quatum cascade laser, Jerome
         *Mi = *Mi + dmi;
     }
     
-    //Qp is defined as the phonon wavevector of phonon emission, Bastard Eq. (11b), eq.2.65 in Franz thesis
+    // Qp is defined as the phonon wavevector of phonon emission, Bastard Eq. (11b), eq.2.65 in Franz thesis
     double Ediff = *EigenEi - *EigenEj;
     if ((Ediff - hwlo) == 0) {
         *Qp = 0;
     } else {
-        *Qp = sqrt(2* *Mi / hbar / hbar * abs(Ediff - hwlo) * e0);
+        *Qp = sqrt(2* *Mi / hbar / hbar * std::abs(Ediff - hwlo) * e0);
+    }
+   
+    double *expArray = new double[xpoints];
+    if (*Qp == 0) {
+        double expDeltaX = deltax;
+        expArray[1] = deltax;
+        for (int i = 0; i < xpoints; i++) {
+            expArray[i] = expArray[i - 1] + expDeltaX;
+        }        
+    } else {
+        double expDeltaX = exp(-*Qp * deltax);
+        expArray[1] = 1;
+        for (int i = 2; i < xpoints; i++) {
+            expArray[i] = expArray[i - 1] * expDeltaX;
+        }       
+    }   
+    
+    // Kale thesis eqn 2.69
+    double *PsiSqu = new double[xpoints];
+    for (int i = 0; i < xpoints; i++) {
+        PsiSqu[i] = Psii[i] * Psij[i];
     }
     
-    double inversetauij;
-    double dIij; //Iij differential
-    double x1, x2;
-    for (n = 0; n < xpoints; n++) {
-        x1 = n * deltax;
-        for(m = 0; m < xpoints; m++)
-        {
-            x2 = m * deltax;
-            if (Qp == 0) {
-                dIij = Psii[m] * Psij[m] * (-abs(x1 - x2)) * Psii[n] * Psij[n] * deltax * deltax;
-            } else {
-                dIij = Psii[m] * Psij[m] * exp(- *Qp * abs(x1 - x2)) * Psii[n] * Psij[n] * deltax * deltax;
-            } 
-            *Iij = *Iij + dIij;
+    for (int i = 0; i < xpoints; i++) {
+        double dI = 0.0;
+        int x = 0;        
+        for (int j = i; j > 0; j--) {
+            dI += expArray[j] * PsiSqu[x];
+            x++;
         }
+        for (int j = 0; j < xpoints - i; j++) {
+            dI += expArray[j] * PsiSqu[x];
+            x++;
+        }        
+        *Iij = *Iij + (PsiSqu[i] * dI);         
     }
+    *Iij *= (deltax * deltax);
+    
+    double inversetauij;
     if (Qp == 0) {
-        inversetauij = *Mi * (e0 / hbar * e0 / hbar) * ( hwlo * e0 / hbar ) / (4 * eps0 ) * ( 1/ *epshighf -  1 / *epsstatic) * ( *Iij );    
+        inversetauij = *Mi * (e0 / hbar * e0 / hbar) * ( hwlo * e0 / hbar ) / (4 * eps0 ) * ( 1 / *epshighf -  1 / *epsstatic) * ( *Iij );    
     } else {
-        inversetauij = *Mi * (e0 / hbar * e0 / hbar) * ( hwlo * e0 / hbar ) / (4 * eps0 ) * ( 1/ *epshighf -  1 / *epsstatic) * ( *Iij / *Qp );    
+        inversetauij = *Mi * (e0 / hbar * e0 / hbar) * ( hwlo * e0 / hbar ) / (4 * eps0 ) * ( 1 / *epshighf -  1 / *epsstatic) * ( *Iij / *Qp );    
     }
      *tauij = 1e12 / inversetauij;   // Ching-Yu: 1 / ps * ((10 ^ 12) * ps / s) = 1 / s
     //temperature dependent
