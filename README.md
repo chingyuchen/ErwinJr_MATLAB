@@ -10,47 +10,50 @@ The lifetime of the electron on a energy level is based on the logitudinal optic
 
 
 ## Energy Levels and Probability Waves
-### Pre-calculation:
+##### Pre-calculation:
 None
-### Input:
+##### Input:
 Temperature, material system, layer structure, bias, number of period, strain 
-### Output:
+##### Output:
 All the confined energy levels, the spacial distribution of the prbability wave
 
 
 ## Lifetimes, Dipole Moment and FoM
-### Pre-calculation:
+##### Pre-calculation:
 Energy levels and probability waves
-### Input:
+##### Input:
 Two selected confined energy levels, temperature
-### Output:
+##### Output:
 LO phonon scattering lifetimes, IFR scattering lifetimes, Optical dipole moment and FoM between the selected two energy levels
 
 
+
 ## Steady State Electron Distribution
-### Pre-calculation:
+##### Pre-calculation:
 Energy levels and probability waves
-### Input:
+##### Input:
 All the confined energy levels in the single target period, all the confined energy levels in the consecutive period, 
 doping density, doping area, upper and lower laser levels, temperature
-### Output:
+##### Output:
 Initial electron distribution, steady state electron distribution on each of the confined energy level, 
 time evolution of the electron distribution, broadening, electroluminescence speactra
 
 
+
 ## Scattering Current
-### Pre-calculation:
+##### Pre-calculation:
 Steady state electron distribution
-### Input:
+##### Input:
 All the energy levels in two consecutive period, temperature
-### Output:
+##### Output:
 Scattering current density
 
 
+
 ## Stimulated Interaction
-### Pre-calculation:
+##### Pre-calculation:
 Energy levels and probability wave
-### Input:
+##### Input:
 Selected interactive optical levels, spectra-overlap ratio, all the confined energy levels in the single target period, all the confined energy levels in the consecutive period, doping density, doping area, upper and lower laser levels, temperature
-### Output:
+##### Output:
 Time evolution of the photon flux, time evolution of the electron distribution, steady state electron distribution
