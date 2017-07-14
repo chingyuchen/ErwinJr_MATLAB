@@ -75,7 +75,7 @@ void Dipole(double * Psim, double * EigenEm, double * Psin, double * EigenEn,
     double Mcxm, Mcxn;
     double wmn = (*EigenEm - *EigenEn) / hbar * e0;
     
-    for(int k=0; k < *xpoints-1; k++)
+    for(int k = 0; k < *xpoints-1; k++)
     {
         //The following if statement incorporates nonparabolicity into the
         //effective masses of electrons and holes.  This is the two-band
@@ -84,14 +84,14 @@ void Dipole(double * Psim, double * EigenEm, double * Psin, double * EigenEn,
         //Because we are dealing with two seperate effective masses, create a
         //joint effective mass
         
-        if(*EigenEm > *(Vcx+k))
-            Mcxm = *(Mcx+k) * (1+(*EigenEm - *(Vcx+k))/(*(Egx+k)));
+        if(*EigenEm > *(Vcx + k))
+            Mcxm = *(Mcx + k) * (1 + (*EigenEm - *(Vcx + k)) / (*(Egx + k)));
         else
-            Mcxm = *(Mcx+k) * (1 - (*(Vcx+k) - *EigenEm)/(*(Egx+k)));
-        if (*EigenEn > *(Vcx+k))
-            Mcxn = *(Mcx+k) * (1+(*EigenEn - *(Vcx+k))/(*(Egx+k)));
+            Mcxm = *(Mcx + k) * (1 - (*(Vcx + k) - *EigenEm) / (*(Egx + k)));
+        if (*EigenEn > *(Vcx + k))
+            Mcxn = *(Mcx + k) * (1 + (*EigenEn - *(Vcx + k)) / (*(Egx + k)));
         else
-            Mcxn = *(Mcx+k) * (1 - (*(Vcx+k) - *EigenEn)/(*(Egx+k)));
+            Mcxn = *(Mcx+k) * (1 - (*(Vcx + k) - *EigenEn) / (*(Egx + k)));
         
         //Dipole calculation uses derivation from PRB, v50, p8663, Sirtori, Faist, Capasso 
         dipole = 0.5 * hbar / (Mcxm * wmn) * ( (*(Psim+k)+*(Psim+k+1))/2 * (*(Psin+k+1)-*(Psin+k)) )  //k+1 will give the wrong result; invalid index

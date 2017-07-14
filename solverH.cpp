@@ -67,10 +67,10 @@ double * material, double * Ep, double * EboundMin, double * Efield, int job, do
 //Ep: for strain compensated effective mass
 
 /* Computational subroutine */
-void solverH(double * deltax, double * xpoints, double * Vcx, double * Mcx,
-double * Egx, double * ESO, double * F, double * material, double * Ep,
-double * EboundMin, double * EboundMax, double * Efield, double * numEpoints,
-double * numEigStates, double * EigEnergies, double * EigPsi, double *McE)
+void solverH(double* deltax, double* xpoints, double* Vcx, double* Mcx,
+double* Egx, double* ESO, double* F, double* material, double* Ep,
+double* EboundMin, double* EboundMax, double* Efield, double* numEpoints,
+double* numEigStates, double* EigEnergies, double* EigPsi, double* McE)
 //EboundMin: minimum energy point (scalar)
 //EboundMax: maximum energy point (scalar)
 //Efield: applied electric field (scalar)
@@ -79,27 +79,27 @@ double * numEigStates, double * EigEnergies, double * EigPsi, double *McE)
 //EigEnergies: second output, Energy in Joules of each eigenstate (array of size 1 x numEigStates)
 //EigPsi: third output, normalized wavefunctions (not squared) (array of size xpoints x numEigStates)
 {
-    int b=0, b_prev=0;
+    int b = 0, b_prev = 0;
     double Emin = *EboundMin;
     double deltaE = (*EboundMax - *EboundMin) / *numEpoints;
-    double EInc=0, Eq_prev=0;
+    double EInc = 0, Eq_prev = 0;
     double Eq;
     double e0 = 1.602e-19;
     
     int EigStateCounter = 0;
     
     double *Psi;
-    Psi = (double *)mxCalloc(int(*xpoints), sizeof(double));
+    Psi = (double*)mxCalloc(int(*xpoints), sizeof(double));
     int *bVals;
-    bVals = (int *)mxCalloc(int(*xpoints), sizeof(int));
+    bVals = (int*)mxCalloc(int(*xpoints), sizeof(int));
     double *Mset;
-    Mset = (double *)mxCalloc(int(*xpoints), sizeof(double));
+    Mset = (double*)mxCalloc(int(*xpoints), sizeof(double));
     double *Mc;
-    Mc = (double *)mxCalloc(1, sizeof(double));
+    Mc = (double*)mxCalloc(1, sizeof(double));
     
-    int q=0;
-    int p=0, badstatecount=0;
-    int xval=0;
+    int q = 0;
+    int p = 0, badstatecount = 0;
+    int xval = 0;
     
     int job = 1;  // job determines which phase of PsiFn to use: the eigenvalue identification phase or the eigenvalue iterration phase
     
@@ -107,8 +107,7 @@ double * numEigStates, double * EigEnergies, double * EigPsi, double *McE)
     //for every Eq point given by EboundMin:deltaE:EboundMax, the function PsiFn computes a corresponding Psi
     //when the last value of Psi -- Psi(xpoints) -- changes signs, the Eq value is flagged
     //  this flagged value corresponds to one eigenvalue
-    for(q=0; q < int(*numEpoints); q++)
-    {
+    for (q = 0; q < int(*numEpoints); q++) {
         Eq = Emin + q * deltaE;
         PsiFn(Eq, deltax, xpoints, Vcx, Mcx, Mset, Egx, ESO, F, material, Ep, EboundMin, Efield, job, Psi);
         
@@ -116,24 +115,22 @@ double * numEigStates, double * EigEnergies, double * EigPsi, double *McE)
         // OR if xmax < xpoints, use xmax
         //     where xmax = 2*Emax[eV]/(E[kV/cm]*1e5) - E[J]/(E[kV/cm]*1e5*e0)
         
-        if (*(Psi+int(*xpoints)-1) < 0)
+        if (*(Psi + int(*xpoints) - 1) < 0) {
             b = -1;
-        if (*(Psi+int(*xpoints)-1) > 0)
+        }
+        if (*(Psi + int(*xpoints) - 1) > 0) {
             b = 1;
+        }
         
-        if( b_prev !=0 && b != b_prev)  // b_prev=0 means first time through
-        {
-            *(EigEnergies + EigStateCounter) = Emin + (q-1) * deltaE;
+        if (b_prev !=0 && b != b_prev) {  // b_prev=0 means first time through
+            *(EigEnergies + EigStateCounter) = Emin + (q - 1) * deltaE;
             *(bVals + EigStateCounter) = b;
             EigStateCounter++;
-            
 //             mexPrintf("  q : %d   Eq : %g   ",q,Eq/e0);
 //             mexPrintf("  Psi_last : %g   ",*(Psi+xval));
 //             mexPrintf("b:%d   EigEnergy : %g  state : %d \n",b,*(EigEnergies + EigStateCounter), EigStateCounter); //, 
-        }
-        
-        b_prev = b;
-        
+        }      
+        b_prev = b;       
     }
     
     *numEigStates = EigStateCounter;
@@ -144,33 +141,33 @@ double * numEigStates, double * EigEnergies, double * EigPsi, double *McE)
     //  this is the true eigen energy
     //the Psi value for this eigen energy is saved in EigPsi after being normalized
     job = 2;
-    for(q=0; q < EigStateCounter; q++)
-    {
+    for (q = 0; q < EigStateCounter; q++) {
         EInc = deltaE / 2;
-        Eq = *(EigEnergies+q) + EInc;
-        b = -*(bVals+q);
+        Eq = *(EigEnergies + q) + EInc;
+        b = - *(bVals + q);
         int compare = 0;
         
-        int j=0, jmax=0;
+        int j = 0, jmax = 0;
         //iteration process to converge on Psi(xpoints) = 0
-        do{
+        do {
             Eq_prev = Eq;
             PsiFn(Eq, deltax, xpoints, Vcx, Mcx, Mset, Egx, ESO, F, material, Ep, EboundMin, Efield, job, Psi);
             
-            compare = *(Psi+int(*xpoints)-1) < 0 ? -1 : 1;  //*(Psi+q) ? 0 : ( *(Psi+q) < 0 ? -1 : 1);
-            if( compare == b)  //signs of Psi & b are equal
+            compare = *(Psi + int(*xpoints) - 1) < 0 ? -1 : 1;  //*(Psi+q) ? 0 : ( *(Psi+q) < 0 ? -1 : 1);
+            if (compare == b) {  //signs of Psi & b are equal
                 Eq = Eq + EInc;
-            else
-            {
-                EInc = EInc/2;
+            } else {
+                EInc = EInc / 2;
                 Eq = Eq - EInc;
             }
             j++;
-            if(j == 250)
-                mexPrintf("State %d had problems converging in energy.",q+1);
-        }while(abs((Eq-Eq_prev)/abs(Eq_prev)) > 1e-15);
-        if(j >= 250)
+            if (j == 250) {
+                mexPrintf("State %d had problems converging in energy.", q + 1);
+            }
+        } while (abs((Eq - Eq_prev) / abs(Eq_prev)) > 1e-15);
+        if (j >= 250) {
             mexPrintf("  %d iterations performed\n",j);
+        }
         // mexPrintf("State: %d  EigenE: %g\n",q,Eq);
         
         //xval = static_cast<int> (ceil((2* *EboundMax - Eq) / (*Efield * 1e5 * e0) / *deltax));  //if used, must fix units
@@ -183,20 +180,17 @@ double * numEigStates, double * EigEnergies, double * EigPsi, double *McE)
         //these are false states that the first routine erronously identifies as eigen states
 //         if( (*(Psi+int(*xpoints)-2)**(Psi+int(*xpoints)-2) - *(Psi+int(*xpoints)-1)**(Psi+int(*xpoints)-1)) < 0 
 //         &&  (*(Psi+int(*xpoints)-3)**(Psi+int(*xpoints)-3) - *(Psi+int(*xpoints)-2)**(Psi+int(*xpoints)-2)) < 0)
-        if( (*(Psi+int(*xpoints)-2)**(Psi+int(*xpoints)-2) - *(Psi+int(*xpoints)-1)**(Psi+int(*xpoints)-1)) / (*(Psi+int(*xpoints)-3)**(Psi+int(*xpoints)-3) - *(Psi+int(*xpoints)-2)**(Psi+int(*xpoints)-2)) > 1
+        if ((*(Psi + int(*xpoints) - 2) * *(Psi + int(*xpoints) - 2) - *(Psi + int(*xpoints) - 1) * *(Psi + int(*xpoints) - 1)) / (*(Psi + int(*xpoints) - 3) * *(Psi + int(*xpoints) - 3) - *(Psi + int(*xpoints) - 2) * *(Psi + int(*xpoints) - 2)) > 1
         //( abs(*(Psi+int(*xpoints)-1)) > abs(1.1**Psi) || abs(*(Psi+int(*xpoints)-1)) < abs(0.9**Psi) )
-           && 0)
-         {
-            badstatecount = badstatecount+1;
-        }
-        else
-        {
+           && 0){
+            badstatecount = badstatecount + 1;
+        } else {
             p = q - badstatecount;
             *(EigEnergies+p) = Eq;
             *(McE+p) = *Mc;
             
             j = p * int(*xpoints);
-            memcpy(&EigPsi[j],Psi,int(*xpoints)*sizeof(double));
+            memcpy(&EigPsi[j], Psi, int(*xpoints) * sizeof(double));
         }
     }
     
@@ -217,29 +211,28 @@ void normalize(double Eq, double *deltax, double *xpoints, int xval, double *Vcx
     int q = 0;
     
     //normalization takes nonparabolicity into account
-    for(q=0; q < *xpoints; q++)
-    {
-        Psi_Sqr = *(Psi+q) * *(Psi+q) * (1 + ((Eq-*(Vcx+q)) / (Eq-*(Vcx+q)+*(Egx+q))));
+    for (q = 0; q < *xpoints; q++){
+        Psi_Sqr = *(Psi + q) * *(Psi + q) * (1 + ((Eq - *(Vcx + q)) / (Eq -*(Vcx + q) + *(Egx + q))));
         Psi_Int = Psi_Int + Psi_Sqr;
         Mcx_Int = Mcx_Int + *(Mset+q) * Psi_Sqr / m0;
     }
     
     *Mc = Mcx_Int / Psi_Int;
     
-    if(xval < *xpoints)
-    {
-        for(q=xval; q < *xpoints; q++)
-            Psi_Int2 = Psi_Int2 + *(Psi+q) * *(Psi+q) * (1 + ((Eq-*(Vcx+q)) / (Eq-*(Vcx+q)+*(Egx+q))));
+    if (xval < *xpoints){
+        for (q = xval; q < *xpoints; q++) {
+            Psi_Int2 = Psi_Int2 + *(Psi + q) * *(Psi + q) * (1 + ((Eq - *(Vcx + q)) / (Eq - *(Vcx + q) + *(Egx + q))));
+        }
 //         mexPrintf("xval: %d   Psidiv: %g\n",xval,Psi_Int2 / Psi_Int);
-        if(Psi_Int2 / Psi_Int > 0.05)
-            *(Psi+int(*xpoints)-1) = 1e30;
+        if (Psi_Int2 / Psi_Int > 0.05){
+            *(Psi + int(*xpoints)-1) = 1e30;
+        }
     }
     
-    a = 1 / sqrt( *deltax *1e-10 * Psi_Int);
-    for(q=0; q < *xpoints; q++)
-        *(Psi+q) = a * *(Psi+q);
-    
-
+    a = 1 / sqrt(*deltax * 1e-10 * Psi_Int);
+    for (q = 0; q < *xpoints; q++) {
+        *(Psi + q) = a * *(Psi + q);
+    }
 }
 
 
@@ -258,37 +251,40 @@ double * material, double * Ep, double *EboundMin, double *Efield, int job, doub
     
  //   int startpoint = int(*xpoints) - ceil( (Eq - *EboundMin)/(*Efield * *deltax)*1e5 + 200/(*deltax));
     int startpoint = 1;
-    if (startpoint < 0)
+    if (startpoint < 0) {
         startpoint = 0;
-    if (job ==2)
+    }
+    if (job == 2) {
         startpoint = 1;
+    }
     
 //     *Psi = 0;
 //     *(Psi+1) = 1;
     
-    for(q=0; q < int(*xpoints); q++)
-    {
-        if(int(*material) == 4 || int(*material) == 5)
+    for (q = 0; q < int(*xpoints); q++) {
+        if (int(*material) == 4 || int(*material) == 5) {
             //No Approximation
-            McxE = m0 / ((1+2* *(F+q)) + *(Ep+q)/3 * (2 / ((Eq-*(Vcx+q))+*(Egx+q)) + 1 / ((Eq-*(Vcx+q))+*(Egx+q)+*(ESO+q)) ));
-        else
-            McxE = *(Mcx+q) * (1 - (*(Vcx+q) - Eq) / *(Egx+q));
+            McxE = m0 / ((1 + 2* *(F + q)) + *(Ep + q) / 3 * (2 / ((Eq - *(Vcx + q)) + *(Egx + q)) + 1 / ((Eq - *(Vcx + q)) + *(Egx + q) + *(ESO + q))));
+        } else {
+            McxE = *(Mcx+q) * (1 - (*(Vcx + q) - Eq) / *(Egx + q));
+        }
         
-        *(Mset+q) = McxE;
+        *(Mset + q) = McxE;
         
-        if(q>0)
-            *(Mset+q-1) = (*(Mset+q-1) + *(Mset+q)) / 2;
+        if (q > 0) {
+            *(Mset + q - 1) = (*(Mset + q - 1) + *(Mset + q)) / 2;
+        }
     }
     
-    for(q=0; q == startpoint; q++)
-        *(Psi+q) = 0;
-    *(Psi+startpoint) = 1;
+    for (q = 0; q == startpoint; q++) {
+        *(Psi + q) = 0;
+    }
+    *(Psi + startpoint) = 1;
     
-    for(q=startpoint; q < int(*xpoints)-1; q++)
-    {
-        *(Psi+q+1) = ((2 * *deltax*1e-10 * *deltax*1e-10 / hbar / hbar * (*(Vcx+q) - Eq)*e0
-                        + 1 / *(Mset+q) + 1 / *(Mset+q-1)) * *(Psi+q)
-                        - *(Psi+q-1) / *(Mset+q-1)) * *(Mset+q);
+    for (q = startpoint; q < int(*xpoints) - 1; q++) {
+        *(Psi + q + 1) = ((2 * *deltax * 1e-10 * *deltax * 1e-10 / hbar / hbar * (*(Vcx + q) - Eq) * e0
+                        + 1 / *(Mset + q) + 1 / *(Mset + q - 1)) * *(Psi + q)
+                        - *(Psi + q - 1) / *(Mset + q - 1)) * *(Mset + q);
     }
 }
 

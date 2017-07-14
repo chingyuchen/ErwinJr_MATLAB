@@ -17,7 +17,7 @@ function varargout = erwinjr(varargin)
 %       presented work having made use of or benefited from this software or 
 %       derivatives thereof must explicitly name Kale J. Franz in a section 
 %       dedicated to acknowledgements or name Kale J. Franz as a co-author 
-%       of the work.\
+%       of the work.
 %     * Any use of this software that directly or indirectly contributes to 
 %       work or a product for which the user is or will be remunerated must be 
 %       further licensed through the Princeton Univeristy Office of Technology 
@@ -4636,26 +4636,27 @@ data = getappdata(handles.hErwinJr,'data');
 global reqnc
 global k
 
-Temper = 80;
+Temper = 230;
 % electron distribution calculation parameters
 dt = 0.01; % [ps]
-tEnd = 500; % [ps]
-nn = 2.5 * (10 ^ 17); % doping density (#/cm3)
-x0 = 251;  % doping intitial position 
-x1 = 251 + 91;  % doping end position
+tEnd = 30; % [ps]
+nn = 3 * (10 ^ 17); % doping density (#/cm3)
+x0 = 383;  % doping intitial position 
+x1 = 383 + 120;  % doping end position
 periIFNum = 3;   % The number of stage to consider IFR scattering
-upInArry = [24];
-lowInArry = [20];
+upInArry = [32];
+lowInArry = [27];
 
 % 5 periods
-periodindex = [24 25 26 28 29 30 31 36]; %indices of states in the chosen period
-nonperiodindex = [10 11 12 13 14 15 16 20]; %indices of states in the next period
+periodindex = [31 32 33 34 36 37 39 41 43 45 46 49 67 73]; %indices of states in the chosen period
+nonperiodindex = [12 13 14 15 16 17 18 20 21 23 24 27 40 44]; %indices of states in the next period
 
 injIn = 2;
 upIn = 1;
 lowIn = size(periodindex, 2);
 dIn = size(periodindex, 2) - 1;
 
+%{
 dpInjL = dipole(data.Psi(:, 43), data.EigenE(43), data.Psi(:, periodindex(lowIn)), data.EigenE(periodindex(lowIn)),...
         data.xpoints, data.Vcx, data.Mcx, data.Egx)
 dpUL = dipole(data.Psi(:, 42), data.EigenE(42), data.Psi(:, periodindex(lowIn)), data.EigenE(periodindex(lowIn)),...
@@ -4664,7 +4665,7 @@ dpLD = dipole(data.Psi(:, periodindex(lowIn)), data.EigenE(periodindex(lowIn)), 
         data.xpoints, data.Vcx, data.Mcx, data.Egx)
 dpR = dpLD / dpUL; % ratio of dople moment between upper to lower and lower to depopulation
 stimFactor = 100;
-Lp = 459; % [angstrom]
+Lp = 744; % [angstrom]
 modeCon = 0.55;
 wavelen = 15.5; % [um]
 broadenUL = 10; % [meV]
@@ -4672,6 +4673,7 @@ broadenInjL = 10;
 broadenLD = 10; 
 alphaW = 40; % [cm-1]
 alphaM = 10; % [cm-1], 
+%}
 
 rinj = 0.1;
 ruinj = 0.1;
@@ -4685,11 +4687,11 @@ save('periodindex.txt','periodindex','-ascii')
 save('nonperiodindex.txt','nonperiodindex','-ascii')
 
 % current calculation parameters.
-statesInArry = [10 11 12 13 14 15 16 20 24 25 26 28 29 30 31 36]; % the state used to calculate current, involving electron scattering through the interface.
-upperLaserIn = 42;  % for recognizing the coresponding nss of the preUp 
-preUpIn = 42;  % The index of upper laser level in the previous period, in case that there are lots of electron on this level that also has obvious contribution to current density
+statesInArry = [12 13 14 15 16 17 18 20 21 23 24 27 40 44 31 32 33 34 36 37 39 41 43 45 46 49 67 73]; % the state used to calculate current, involving electron scattering through the interface.
+upperLaserIn = 32;  % for recognizing the coresponding nss of the preUp 
+preUpIn = 58;  % The index of upper laser level in the previous period, in case that there are lots of electron on this level that also has obvious contribution to current density
 
-periodLength = 459;  % stage thincknes, (angstrom)
+periodLength = 744;  % stage thincknes, (angstrom)
 resTimes = 20;  % for a stage, how many interface current is to be calculated.
 stepLength = periodLength / resTimes;    % thickness between the interfaces.
 startPosi = periodLength * (2 - 0.5);  % the first interface that going to be calculated
@@ -4888,22 +4890,22 @@ save('nTELOStimInj.txt','nTELOStimInj','-ascii');
 save('nTEPerLOStimInj.txt','nTEPerLOStimInj','-ascii');
 %}
 
-
+%{
 [nTELOStim, nTEPerLOStim, nssStimLO, nssSysStatesLOStim, nsDiffLOStim] = nTimeEvolutionStimUpperOnly(upIn, lowIn, dIn, dt, tEnd, reqnc, nICSolve, numSysState, periodindex, nonperiodindex, dpUL, dpLD, modeCon, Lp, wavelen, broadenUL, broadenLD, alphaW, alphaM, r1, r2);
 save('nsDiffLOStim.txt','nsDiffLOStim','-ascii');
 save('nTELOStim.txt','nTELOStim','-ascii');
 save('nTEPerLOStim.txt','nTEPerLOStim','-ascii');
+%}
 
 
 
-%{
 % time evolution of the electron distribution considering LO phonon scattering
 [nTELO, nTEPerLO, nssLO, nssSysStateLO, nsDiffLO] = nTimeEvolution(dt, tEnd, reqnc, nICSolve, numSysState, periodindex, nonperiodindex);
 save('nsDiffLO.txt','nsDiffLO','-ascii');
 save('nTELO.txt','nTELO','-ascii');
 save('nTEPerLO.txt','nTEPerLO','-ascii');
-%}
-%{
+
+
 % time evolution of the electron distribution considering IFR scattering
 [nTEIR, nTEPerIR, nssIR, nssSysStateIR, nsDiffIR] = nTimeEvolution(dt, tEnd, reqnIRc, nICSolve, numSysState, periodindex, nonperiodindex);
 save('nsDiffIR.txt','nsDiffIR','-ascii');
@@ -4948,7 +4950,7 @@ end
 done = 0
 %save('JtotalWPre.txt','JtotalWPre','-ascii');
 save('JtotalWOPre.txt','JtotalWOPre','-ascii');
-%}
+
   
     
    
