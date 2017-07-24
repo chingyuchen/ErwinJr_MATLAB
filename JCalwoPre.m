@@ -77,7 +77,7 @@ function [JtotalWOPre] = JCalwoPre(nssIF, runIF, probAllL, probAllR, statesInArr
                  JMatrixBack(j, i) = nssIF(j) * probAllR(j) * probAllL(i) * freHL; % from state j to state i, right to left, higher to lower.
 
               end    
-              Jtotal = Jtotal + JMatrixFow(i, j) + JMatrixFow(j, i) - JMatrixBack(i, j) - JMatrixBack(j, i)
+              Jtotal = Jtotal + JMatrixFow(i, j) + JMatrixFow(j, i) - JMatrixBack(i, j) - JMatrixBack(j, i);
         end
         end
    
