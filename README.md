@@ -10,11 +10,11 @@ The lifetime of the electron on a energy level is based on the logitudinal optic
 
 
 ## Energy Levels and Probability Waves
-#### Pre-calculation:
+#### [Pre-calculation]
 None
-#### Input:
+#### [Input]
 Temperature, material system, layer structure, bias, number of period, strain 
-#### Output:
+#### [Output]
 All the confined energy levels, the spacial distribution of the prbability wave
 
 

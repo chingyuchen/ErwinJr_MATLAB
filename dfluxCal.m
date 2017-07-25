@@ -1,5 +1,5 @@
 %{
-Copyright (c) 2012-2016, Ching-Yu Chen
+Copyright (c) 2012-2017, Ching-Yu Chen
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
@@ -14,8 +14,8 @@ Copyright (c) 2012-2016, Ching-Yu Chen
 //       distribution.
 //     * Any publication, presentation, or other publicly or privately 
 //       presented work having made use of or benefited from this software or 
-//       derivatives thereof must explicitly name Kale J. Franz in a section 
-//       dedicated to acknowledgements or name Kale J. Franz as a co-author 
+//       derivatives thereof must explicitly name Ching-Yu Chen in a section 
+//       dedicated to acknowledgements or name Ching-Yu Chen as a co-author 
 //       of the work.
 //     * Any use of this software that directly or indirectly contributes to 
 //       work or a product for which the user is or will be remunerated must be 

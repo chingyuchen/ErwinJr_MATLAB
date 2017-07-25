@@ -891,102 +891,6 @@ while 1 %the loop runs until a break occurs
     refreshRegionList(hObject, eventdata, handles);
     data = getappdata(handles.hErwinJr,'data');
     
-    
-%     figure('Name','voltage'); plot(data.x,voltage)
-%     figure('Name','charge'); plot(data.x,electron_charge,data.x,dopant_charge)
-%     figure('Name','sigma'); plot(data.x,sigma)
-%     figure('Name','Efield'); plot(data.x,Efield)
-%     figure('Name','convergence'); plot(convergence_track)
-    
-
-%     if data.sc_count < 2
-%         charge_Vold = voltage;
-%         data.VcxPlot = data.Vcx;
-%         data.Vcx = original_Vcx + voltage; %added in 0.5* and makes the SL structure converge, but not on correct solution
-%         data.sc_count = data.sc_count+1;
-%         setappdata(handles.hErwinJr,'data',data);
-%         refreshRegionList(hObject, eventdata, handles);
-%         data = getappdata(handles.hErwinJr,'data');
-% %         plotfigureButton_Callback(hObject, eventdata, handles);
-%         continue
-%     elseif data.sc_count >= 2
-%         data.sc_count = 1;
-%         data.itertn=data.itertn+1;
-%         
-%         if data.itertn < str2num(get(handles.display_scmax,'String'))
-%             data.VcxPlot = data.Vcx;
-%             data.Vcx = original_Vcx + 0.5*voltage + 0.5*charge_Vold;
-%             data.voltage_track(:,data.itertn) = 0.5*voltage + 0.5*charge_Vold;
-%         end
-% %         figure('Name','voltage'); plot(data.x,0.5*voltage + 0.5*charge_Vold)
-%         
-%         setappdata(handles.hErwinJr,'data',data);
-%         refreshRegionList(hObject, eventdata, handles);
-%         data = getappdata(handles.hErwinJr,'data');
-% %         plotfigureButton_Callback(hObject, eventdata, handles);
-%         
-%         convergence = sum(abs(voltage-charge_Vold)) / data.xpoints * 1e3;
-%         convergence_track(data.itertn) = convergence;
-% 
-% %         convergence = sum(abs(data.Vcx - Vcxold));
-%         Vcxold = data.Vcx;
-% 
-%         set(handles.selfconDisp,'BackgroundColor','white');
-%         set(handles.selfconDisp,'String',['conv(' num2str(data.itertn) ')=' num2str(convergence,'%11.3g')]);
-% 
-%         setappdata(handles.hErwinJr,'data',data);
-%         
-%         if scale_factor >= 1
-%             convergence_val = 0.05;
-%         else
-%             convergence_val = 0.5;
-%         end
-% 
-%         if convergence <= convergence_val || get(handles.selfconButton,'Value') == 0 || data.itertn >= str2num(get(handles.display_scmax,'String'))
-%             
-%             if data.itertn == str2num(get(handles.display_scmax,'String'))
-%                 [junk, idx] = min(convergence_track);
-%                 data.Vcx = original_Vcx + data.voltage_track(:,idx);
-%                 data.sc_count = 3;
-%                 data.itertn = data.itertn+1;
-%                 setappdata(handles.hErwinJr,'data',data);
-%                 refreshRegionList(hObject, eventdata, handles);
-%                 data = getappdata(handles.hErwinJr,'data');
-%                 continue
-%             end
-%             
-%             if data.itertn > str2num(get(handles.display_scmax,'String')) && idx > 0
-%                 set(handles.selfconDisp,'String',['conv(' num2str(idx) ')=' num2str(convergence_track(idx),'%11.3g')]);
-%             end
-% 
-%             data.VcxPlot = data.Vcx;
-%             setappdata(handles.hErwinJr,'data',data);
-%             refreshRegionList(hObject, eventdata, handles);
-%             data = getappdata(handles.hErwinJr,'data');
-%             
-%             if scale_factor == 1
-%                 figure('Name','voltage'); plot(data.x,voltage)
-%                 xlabel ('Position (?')
-%                 ylabel ('Poisson Correction (eV)')
-% 
-%                 %plot detailed self-consistent plots
-%                 if data.showSCplots == 1
-%                     figure('Name','charge'); plot(data.x,electron_charge,data.x,dopant_charge)
-%                     figure('Name','sigma'); plot(data.x,sigma)
-%                     figure('Name','Efield'); plot(data.x,Efield)
-%                     figure('Name','convergence'); plot(convergence_track)
-%                 end
-%                 
-%                 break
-%             end
-%             %             scale_factor = scale_factor+0.2;
-% %             if scale_factor > 1
-% %                 scale_factor = 1;
-% %             end
-%         end
-%     end
-
-% end self consistent
 end
 
 
@@ -1030,11 +934,6 @@ try
 catch
     lasterror
 end
-%pass values to handles.hErwinJr
-% setappdata(handles.hErwinJr,'Psi',data.Psi);
-% setappdata(handles.hErwinJr,'EigenE',data.EigenE);
-% setappdata(handles.hErwinJr,'ARstateNums',data.ARstateNums);
-% setappdata(handles.hErwinJr,'PsiSqrPlot',PsiSqrPlot);
 
 guidata(hObject,handles); setappdata(handles.hErwinJr,'data',data);
 refreshRegionList(hObject, eventdata, handles);
@@ -1095,13 +994,6 @@ if mod(1/data.xres,1) ~= 0
     uiwait(h);
 end
 
-
-% xdisp = get(handles.xpointsDisplay,'String');
-% xdisp = strrep(xdisp,'xpoints','');
-% xdisp = strrep(xdisp,':','');
-% xdisp = strrep(xdisp,' ','');
-% data.xpoints = str2double(xdisp);
-% set(handles.xpointsDisplay,'String',['xpoints: ' num2str(xdisp)]);
 guidata(hObject, handles); setappdata(handles.hErwinJr,'data',data);
 refreshRegionList(hObject, eventdata, handles);
 
@@ -1132,11 +1024,7 @@ Endisp = strrep(Endisp,'meV','');
 Endisp = strrep(Endisp,' ','');
 data.Eres = str2double(Endisp);
 set(handles.EpointsDisplay,'String',[num2str(data.Eres) ' meV']);
-% Endisp = strrep(Endisp,'Epoints','');
-% Endisp = strrep(Endisp,':','');
-% Endisp = strrep(Endisp,' ','');
-% data.Epoints = str2double(Endisp);
-% set(handles.EpointsDisplay,'String',['Epoints: ' num2str(Endisp)]);
+
 data.layermod = 1;
 guidata(hObject, handles); setappdata(handles.hErwinJr,'data',data);
 refreshRegionList(hObject, eventdata, handles);
@@ -4636,32 +4524,22 @@ data = getappdata(handles.hErwinJr,'data');
 global reqnc
 global k
 
-Temper = 230;
-% electron distribution calculation parameters
-dt = 0.01; % [ps]
-tEnd = 30; % [ps]
-nn = 3 * (10 ^ 17); % doping density (#/cm3)
-x0 = 383;  % doping intitial position 
-x1 = 383 + 120;  % doping end position
+[Temper, roughmean, correllength, nn, x0, x1, dt, tEnd, periodIndex, nonperiodIndex, upInArray, lowInArray, statesInArray, upperLaserIn, preUpIn] = loadInput();
+
 periIFNum = 3;   % The number of stage to consider IFR scattering
-upInArry = [32];
-lowInArry = [27];
-
-% 5 periods
-periodindex = [31 32 33 34 36 37 39 41 43 45 46 49 67 73]; %indices of states in the chosen period
-nonperiodindex = [12 13 14 15 16 17 18 20 21 23 24 27 40 44]; %indices of states in the next period
-
-injIn = 2;
-upIn = 1;
-lowIn = size(periodindex, 2);
-dIn = size(periodindex, 2) - 1;
 
 %{
-dpInjL = dipole(data.Psi(:, 43), data.EigenE(43), data.Psi(:, periodindex(lowIn)), data.EigenE(periodindex(lowIn)),...
+injIn = 2;
+upIn = 1;
+
+lowIn = size(periodIndex, 2);
+dIn = size(periodIndex, 2) - 1;
+
+dpInjL = dipole(data.Psi(:, 43), data.EigenE(43), data.Psi(:, periodIndex(lowIn)), data.EigenE(periodIndex(lowIn)),...
         data.xpoints, data.Vcx, data.Mcx, data.Egx)
-dpUL = dipole(data.Psi(:, 42), data.EigenE(42), data.Psi(:, periodindex(lowIn)), data.EigenE(periodindex(lowIn)),...
+dpUL = dipole(data.Psi(:, 42), data.EigenE(42), data.Psi(:, periodIndex(lowIn)), data.EigenE(periodIndex(lowIn)),...
         data.xpoints, data.Vcx, data.Mcx, data.Egx)
-dpLD = dipole(data.Psi(:, periodindex(lowIn)), data.EigenE(periodindex(lowIn)), data.Psi(:, periodindex(dIn)), data.EigenE(periodindex(dIn)),...
+dpLD = dipole(data.Psi(:, periodIndex(lowIn)), data.EigenE(periodIndex(lowIn)), data.Psi(:, periodIndex(dIn)), data.EigenE(periodIndex(dIn)),...
         data.xpoints, data.Vcx, data.Mcx, data.Egx)
 dpR = dpLD / dpUL; % ratio of dople moment between upper to lower and lower to depopulation
 stimFactor = 100;
@@ -4673,7 +4551,6 @@ broadenInjL = 10;
 broadenLD = 10; 
 alphaW = 40; % [cm-1]
 alphaM = 10; % [cm-1], 
-%}
 
 rinj = 0.1;
 ruinj = 0.1;
@@ -4682,15 +4559,12 @@ rl = 0.1;
 
 r1 = 0.5; 
 r2 = 0.5;
+%}
 
-save('periodindex.txt','periodindex','-ascii')
-save('nonperiodindex.txt','nonperiodindex','-ascii')
+save('periodIndex.txt','periodIndex','-ascii')
+save('nonperiodIndex.txt','nonperiodIndex','-ascii')
 
-% current calculation parameters.
-statesInArry = [12 13 14 15 16 17 18 20 21 23 24 27 40 44 31 32 33 34 36 37 39 41 43 45 46 49 67 73]; % the state used to calculate current, involving electron scattering through the interface.
-upperLaserIn = 32;  % for recognizing the coresponding nss of the preUp 
-preUpIn = 58;  % The index of upper laser level in the previous period, in case that there are lots of electron on this level that also has obvious contribution to current density
-
+% Current Interface
 periodLength = 744;  % stage thincknes, (angstrom)
 resTimes = 20;  % for a stage, how many interface current is to be calculated.
 stepLength = periodLength / resTimes;    % thickness between the interfaces.
@@ -4703,18 +4577,14 @@ end
 currIFArry = currIFArry ./ data.xres;
 
 
-k = size(periodindex, 2);
-m = size(nonperiodindex, 2);
+k = size(periodIndex, 2);
+m = size(nonperiodIndex, 2);
 normSquPsi = normSqu(data.Psi) * data.xres * (10 ^ -10);
 phononnum = (exp(data.hwlo / (data.kb * Temper)) -1) ^ (-1);    % Ching-Yu add, phonon population number, Bastard eqn(15)
-roughmean = 0.15 * (10 ^ -9); % interface roughness mean height, unit meter, 0.15 nm
-correllength = 60 * (10 ^ -10); % correlation length, unit meter, 60 angstrom
 roughfactor = pi .* data.me ./ (data.hbar ^ 2) .* (roughmean .^ 2)' * (correllength .^ 2); % matrix of the factor of intersubband scattering due to interface roughness, pi*effmass/(hbar^2)*(correllength^2)*(roughmean^2), matrix of states
 deltaU = 520 * (10 ^ -3) * data.e0;  % band offset, 520meV, unit J
-freMatrix = freMatrixCal(statesInArry, data.Psi, data.EigenE, data.xpoints, data.xres, data.Vcx, data.Mcx, data.Egx, Temper, phononnum);  % construct the scattering frequency matrix of the states of the consecutive two stages
+freMatrix = freMatrixCal(statesInArray, data.Psi, data.EigenE, data.xpoints, data.xres, data.Vcx, data.Mcx, data.Egx, Temper, phononnum);  % construct the scattering frequency matrix of the states of the consecutive two stages
 assignin('base', 'freMatrix', freMatrix);
-
-
 
 interfaceIn = transIFIn(data.wellWidths', data.xres, periIFNum); % Find the spacial index of the interfaces to be considered in IFR scattering
 interfaceNum = size(interfaceIn, 2);
@@ -4727,7 +4597,7 @@ end
 
 for i = 1: k                      %run period states index
     for j = 1 : m                   %run nonperiod states index
-        dp = dipole(data.Psi(:,periodindex(i)), data.EigenE(periodindex(i)), data.Psi(:,nonperiodindex(j)), data.EigenE(nonperiodindex(j)),...
+        dp = dipole(data.Psi(:,periodIndex(i)), data.EigenE(periodIndex(i)), data.Psi(:,nonperiodIndex(j)), data.EigenE(nonperiodIndex(j)),...
         data.xpoints, data.Vcx, data.Mcx, data.Egx); 
         
         if abs(dp) < 1
@@ -4751,16 +4621,16 @@ partFactorIFRIV = roughfactor * (deltaU * deltaU) * (10 ^ -12);
 for q = 1 : k
     if q > 1
         for i = 1 : (q - 1)   
-            freHL = freMatrix(periodindex(q), periodindex(i));
-            freLH = freMatrix(periodindex(i), periodindex(q));
+            freHL = freMatrix(periodIndex(q), periodIndex(i));
+            freLH = freMatrix(periodIndex(i), periodIndex(q));
             % electrons in energy states q increases due to lower energy level LO phonon scattering to state q
             reqnc(q, i) = freLH;
             reqnwIRc(q, i) = freLH;
             
             % electrons in energy states q decreases due to LO phonon scattering and IFR scattering to lower energy levels        
-            wavefacsqua = factorWFS * data.McE(periodindex(q)) * (data.EigenE(periodindex(q)) - data.EigenE(periodindex(i))); 
+            wavefacsqua = factorWFS * data.McE(periodIndex(q)) * (data.EigenE(periodIndex(q)) - data.EigenE(periodIndex(i))); 
             factorIFRInver = partFactorIFRIV * exp(-1 * (correllength * correllength) * (wavefacsqua) / 4) / data.hbar; % Yenting's thesis eqn 4.11
-            IRinverself = factorIFRInver * data.McE(periodindex(q)) * ((psiIFR(:, periodindex(i)) .^ 2)' * (psiIFR(:, periodindex(q)) .^ 2)) / (normSquPsi(periodindex(i)) * normSquPsi(periodindex(q))); % Yenting's thesis eqn 4.11
+            IRinverself = factorIFRInver * data.McE(periodIndex(q)) * ((psiIFR(:, periodIndex(i)) .^ 2)' * (psiIFR(:, periodIndex(q)) .^ 2)) / (normSquPsi(periodIndex(i)) * normSquPsi(periodIndex(q))); % Yenting's thesis eqn 4.11
             
             reqnc(q, q) = reqnc(q, q) - freHL;
             reqnwIRc(q, q) = reqnwIRc(q, q) - freHL - IRinverself; % rate equation coefficient considering interface roughness and LO phonon scattering
@@ -4770,17 +4640,17 @@ for q = 1 : k
     
     if q < k
         for i = (q + 1) : k    % Ching-Yu: electrons in energy states q increases due to higher energy level LO phonon scattering and IFR scattering to state q
-            freHL = freMatrix(periodindex(i), periodindex(q));
-            freLH = freMatrix(periodindex(q), periodindex(i));
+            freHL = freMatrix(periodIndex(i), periodIndex(q));
+            freLH = freMatrix(periodIndex(q), periodIndex(i));
             
             % electrons in energy states q decreases due to LO phonon scattering from state q to higher energy levels   
             reqnc(q, q) = reqnc(q, q) - freLH;
             reqnwIRc(q, q) = reqnwIRc(q, q) - freLH;
             
             % electrons in energy states q decreases due to LO phonon scattering and IFR scattering to lower energy levels
-            wavefacsqua = factorWFS * data.McE(periodindex(i)) * (data.EigenE(periodindex(i)) - data.EigenE(periodindex(q)));
+            wavefacsqua = factorWFS * data.McE(periodIndex(i)) * (data.EigenE(periodIndex(i)) - data.EigenE(periodIndex(q)));
             factorIFRInver = partFactorIFRIV * exp(-1 * (correllength * correllength) * (wavefacsqua) / 4) / data.hbar;
-            IRinverself = factorIFRInver * data.McE(periodindex(i)) * ((psiIFR(:, periodindex(i)) .^ 2)' * (psiIFR(:, periodindex(q)) .^ 2)) / (normSquPsi(periodindex(i)) * normSquPsi(periodindex(q))); % Yenting's thesis eqn 4.11
+            IRinverself = factorIFRInver * data.McE(periodIndex(i)) * ((psiIFR(:, periodIndex(i)) .^ 2)' * (psiIFR(:, periodIndex(q)) .^ 2)) / (normSquPsi(periodIndex(i)) * normSquPsi(periodIndex(q))); % Yenting's thesis eqn 4.11
             reqnc(q, i) = freHL; % unit 1/ps
             reqnwIRc(q, i) =  freHL + IRinverself; % rate equation coefficient considering interface roughness
             reqnIRc(q, i) = IRinverself;
@@ -4797,18 +4667,18 @@ save('reqncwIRwononperi.txt','reqnc','-ascii')
 for i = 1 : k
     for j = 1 : m
         if recordinform(i, j, 1) > 0     % !0, which means the i and j state has dipole moment more than 1 angstrom
-            if data.EigenE(periodindex(i)) > data.EigenE(nonperiodindex(j)) % = 0,the nonperiod state has lower energy 
-                freHL = freMatrix(periodindex(i), nonperiodindex(j));
-                freLH = freMatrix(nonperiodindex(j), periodindex(i));
+            if data.EigenE(periodIndex(i)) > data.EigenE(nonperiodIndex(j)) % = 0,the nonperiod state has lower energy 
+                freHL = freMatrix(periodIndex(i), nonperiodIndex(j));
+                freLH = freMatrix(nonperiodIndex(j), periodIndex(i));
                 
-                reqnc(i, j) = reqnc(i, j) + freLH;  % electrons in data.EigenE(nonperiod(j)) state scatter into data.EigenE(periodindex(j)) state, data.EigenE(periodindex(i)) state electrons increases
-                reqnc(j, j) = reqnc(j, j) - freLH;   % electrons in data.EigenE(periodindex(j)) state scatter into nonperiod state, data.EigenE(periodindex(j)) state electrons decreases
+                reqnc(i, j) = reqnc(i, j) + freLH;  % electrons in data.EigenE(nonperiod(j)) state scatter into data.EigenE(periodIndex(j)) state, data.EigenE(periodIndex(i)) state electrons increases
+                reqnc(j, j) = reqnc(j, j) - freLH;   % electrons in data.EigenE(periodIndex(j)) state scatter into nonperiod state, data.EigenE(periodIndex(j)) state electrons decreases
                 reqnc(i, i) = reqnc(i, i) - freHL;        % electrons in data.EigenE(period(i)) scatter to  data.EigenE(nonperiod(j)),
                 reqnc(j, i) = reqnc(j, i) + freHL;   % electrons in nonperiod states scatter
                            
-                wavefacsqua = factorWFS * data.McE(periodindex(i)) * (data.EigenE(periodindex(i)) - data.EigenE(nonperiodindex(j)));   
+                wavefacsqua = factorWFS * data.McE(periodIndex(i)) * (data.EigenE(periodIndex(i)) - data.EigenE(nonperiodIndex(j)));   
                 factorIFRInver = partFactorIFRIV * exp(-1 * (correllength * correllength) * (wavefacsqua) / 4) / data.hbar; 
-                IRinverself = factorIFRInver * data.McE(periodindex(i)) * ((psiIFR(:, periodindex(i)) .^ 2)' * (psiIFR(:, nonperiodindex(j)) .^ 2)) / (normSquPsi(periodindex(i)) * normSquPsi(nonperiodindex(j))); % Yenting's thesis eqn 4.11
+                IRinverself = factorIFRInver * data.McE(periodIndex(i)) * ((psiIFR(:, periodIndex(i)) .^ 2)' * (psiIFR(:, nonperiodIndex(j)) .^ 2)) / (normSquPsi(periodIndex(i)) * normSquPsi(nonperiodIndex(j))); % Yenting's thesis eqn 4.11
                 reqnwIRc(i, j) = reqnwIRc(i, j) + freLH;
                 reqnwIRc(j, j) = reqnwIRc(j, j) - freLH;                     
                 reqnwIRc(i, i) = reqnwIRc(i, i) - freHL - IRinverself;     
@@ -4817,17 +4687,17 @@ for i = 1 : k
                 reqnIRc(j, i) = reqnIRc(j, i) + IRinverself;
                 
             else   % nonperiod state has higher energy
-                freHL = freMatrix(nonperiodindex(j), periodindex(i));
-                freLH = freMatrix(periodindex(i), nonperiodindex(j));
+                freHL = freMatrix(nonperiodIndex(j), periodIndex(i));
+                freLH = freMatrix(periodIndex(i), nonperiodIndex(j));
                 
-                reqnc(i, j) = reqnc(i, j) + freHL;  % electrons in data.EigenE(nonperiod(j)) state scatter into data.EigenE(periodindex(j)) state
-                reqnc(j, j) = reqnc(j, j)- freHL;   % electrons in data.EigenE(periodindex(j)) state scatter into lower outside period state
+                reqnc(i, j) = reqnc(i, j) + freHL;  % electrons in data.EigenE(nonperiod(j)) state scatter into data.EigenE(periodIndex(j)) state
+                reqnc(j, j) = reqnc(j, j)- freHL;   % electrons in data.EigenE(periodIndex(j)) state scatter into lower outside period state
                 reqnc(i, i) = reqnc(i, i) - freLH;        % electrons in data.EigenE(period(i)) scatter to nonperiod states, electrons in data.EigenE(period(i)) decreases
                 reqnc (j, i) = reqnc (j, i) +  freLH;  % electrons in nonperiod states scatter into period(j) state, electron increase  
                 
-                wavefacsqua = factorWFS * data.McE(nonperiodindex(j)) * (data.EigenE(nonperiodindex(j)) - data.EigenE(periodindex(i)));   
+                wavefacsqua = factorWFS * data.McE(nonperiodIndex(j)) * (data.EigenE(nonperiodIndex(j)) - data.EigenE(periodIndex(i)));   
                 factorIFRInver = partFactorIFRIV * exp(-1 * (correllength * correllength) * (wavefacsqua) / 4) / data.hbar; 
-                IRinverself = factorIFRInver * data.McE(nonperiodindex(j)) * ((psiIFR(:, periodindex(i)) .^ 2)' * (psiIFR(:, nonperiodindex(j)) .^ 2)) / (normSquPsi(periodindex(i)) * normSquPsi(nonperiodindex(j))); % Yenting's thesis eqn 4.11, unit s
+                IRinverself = factorIFRInver * data.McE(nonperiodIndex(j)) * ((psiIFR(:, periodIndex(i)) .^ 2)' * (psiIFR(:, nonperiodIndex(j)) .^ 2)) / (normSquPsi(periodIndex(i)) * normSquPsi(nonperiodIndex(j))); % Yenting's thesis eqn 4.11, unit s
                 reqnwIRc(i, j) = reqnwIRc(i, j) + freHL + IRinverself;
                 reqnwIRc(j, j) = reqnwIRc(j, j) - freHL - IRinverself;      
                 reqnwIRc(i, i) = reqnwIRc(i, i) - freLH;     
@@ -4877,21 +4747,21 @@ nIC = nICAll(xAvg, data.EigenE, data.Efield, data.McE, data.Psi, data.xres, norm
 
 % take the IC onlt the states of interested 
 for i = 1 : k
-    nICSolve(i) = nIC(periodindex(i));
+    nICSolve(i) = nIC(periodIndex(i));
 end
 assignin('base', 'Initialcondition', nICSolve)
 save('nICSolve.txt','nICSolve','-ascii')
 %----IC cal. End----------------------------------------------------------
 numSysState = size(data.EigenE, 2);
 %{
-[nTELOStimInj, nTEPerLOStimInj, nssStimLOInj, nssSysStatesLOStimInj, nsDiffLOStimInj] = nTimeEvolutionStimInj(injIn, upIn, lowIn, dIn, dt, tEnd, reqnc, nICSolve, numSysState, periodindex, nonperiodindex, dpInjL, dpUL, dpLD, modeCon, Lp, wavelen, broadenInjL, broadenUL, broadenLD, alphaW, alphaM, rinj, ruinj, rul, rl);
+[nTELOStimInj, nTEPerLOStimInj, nssStimLOInj, nssSysStatesLOStimInj, nsDiffLOStimInj] = nTimeEvolutionStimInj(injIn, upIn, lowIn, dIn, dt, tEnd, reqnc, nICSolve, numSysState, periodIndex, nonperiodIndex, dpInjL, dpUL, dpLD, modeCon, Lp, wavelen, broadenInjL, broadenUL, broadenLD, alphaW, alphaM, rinj, ruinj, rul, rl);
 save('nsDiffLOStimInj.txt','nsDiffLOStimInj','-ascii');
 save('nTELOStimInj.txt','nTELOStimInj','-ascii');
 save('nTEPerLOStimInj.txt','nTEPerLOStimInj','-ascii');
 %}
 
 %{
-[nTELOStim, nTEPerLOStim, nssStimLO, nssSysStatesLOStim, nsDiffLOStim] = nTimeEvolutionStimUpperOnly(upIn, lowIn, dIn, dt, tEnd, reqnc, nICSolve, numSysState, periodindex, nonperiodindex, dpUL, dpLD, modeCon, Lp, wavelen, broadenUL, broadenLD, alphaW, alphaM, r1, r2);
+[nTELOStim, nTEPerLOStim, nssStimLO, nssSysStatesLOStim, nsDiffLOStim] = nTimeEvolutionStimUpperOnly(upIn, lowIn, dIn, dt, tEnd, reqnc, nICSolve, numSysState, periodIndex, nonperiodIndex, dpUL, dpLD, modeCon, Lp, wavelen, broadenUL, broadenLD, alphaW, alphaM, r1, r2);
 save('nsDiffLOStim.txt','nsDiffLOStim','-ascii');
 save('nTELOStim.txt','nTELOStim','-ascii');
 save('nTEPerLOStim.txt','nTEPerLOStim','-ascii');
@@ -4900,47 +4770,47 @@ save('nTEPerLOStim.txt','nTEPerLOStim','-ascii');
 
 
 % time evolution of the electron distribution considering LO phonon scattering
-[nTELO, nTEPerLO, nssLO, nssSysStateLO, nsDiffLO] = nTimeEvolution(dt, tEnd, reqnc, nICSolve, numSysState, periodindex, nonperiodindex);
+[nTELO, nTEPerLO, nssLO, nssSysStateLO, nsDiffLO] = nTimeEvolution(dt, tEnd, reqnc, nICSolve, numSysState, periodIndex, nonperiodIndex);
 save('nsDiffLO.txt','nsDiffLO','-ascii');
 save('nTELO.txt','nTELO','-ascii');
 save('nTEPerLO.txt','nTEPerLO','-ascii');
 
 
 % time evolution of the electron distribution considering IFR scattering
-[nTEIR, nTEPerIR, nssIR, nssSysStateIR, nsDiffIR] = nTimeEvolution(dt, tEnd, reqnIRc, nICSolve, numSysState, periodindex, nonperiodindex);
+[nTEIR, nTEPerIR, nssIR, nssSysStateIR, nsDiffIR] = nTimeEvolution(dt, tEnd, reqnIRc, nICSolve, numSysState, periodIndex, nonperiodIndex);
 save('nsDiffIR.txt','nsDiffIR','-ascii');
 save('nTEIR.txt','nTEIR','-ascii');
 save('nTEPerIR.txt','nTEPerIR','-ascii');
 
 % time evolution of electron distribution considering LO phonon and IFR scattering
-[nTEWIR, nTEPerWIR, nssWIR, nssSysStateWIR, nsDiffWIR] = nTimeEvolution(dt, tEnd, reqnwIRc, nICSolve, numSysState, periodindex, nonperiodindex);
+[nTEWIR, nTEPerWIR, nssWIR, nssSysStateWIR, nsDiffWIR] = nTimeEvolution(dt, tEnd, reqnwIRc, nICSolve, numSysState, periodIndex, nonperiodIndex);
 save('nsDiffWIR.txt','nsDiffWIR','-ascii');
 save('nTEWIR.txt','nTEWIR','-ascii');
 save('nTEPerWIR.txt','nTEPerWIR','-ascii');
 
-[zero] = ELCal(nssLO, nssIR, nssWIR, data.Psi, periodindex, data.EigenE, data.xpoints, data.Vcx, data.Mcx, data.Egx);
+[zero] = ELCal(nssLO, nssIR, nssWIR, data.Psi, periodIndex, data.EigenE, data.xpoints, data.Vcx, data.Mcx, data.Egx);
 
 
 %------injection efficeincy calculation------------------------------------
-nssIF = nssAsign(nssSysStateWIR, statesInArry);  % Assign the nss of the state to be consier into the array nssIF
+nssIF = nssAsign(nssSysStateWIR, statesInArray);  % Assign the nss of the state to be consier into the array nssIF
 nssPreUp = nssSysStateWIR(upperLaserIn);
-numStates = size(statesInArry, 2);
+numStates = size(statesInArray, 2);
 numIF = size(currIFArry, 2);
 
 for runIF = 1 : numIF   % number of current density we want to calculate. Each time calculate at one interface
 
     % Calculate probability portions on the left and right side of the interface
     currIFIn = currIFArry(runIF);
-    [probAllL, probAllR, probPreUpL, probPreUpR] = probState(currIFIn, statesInArry, preUpIn, normSquPsi, data.Psi, data.xres);
+    [probAllL, probAllR, probPreUpL, probPreUpR] = probState(currIFIn, statesInArray, preUpIn, normSquPsi, data.Psi, data.xres);
 
     % Jtotal calculation, without considering the contribution from the
     % previous upper laser level.
-    JtotalWOPrei = JCalwoPre(nssIF, runIF, probAllL, probAllR, statesInArry, freMatrix);
+    JtotalWOPrei = JCalwoPre(nssIF, runIF, probAllL, probAllR, statesInArray, freMatrix);
     JtotalWOPre(runIF) = JtotalWOPrei;
 
     %---Add previous period upper level contribution------------------------
     %{
-    [JtotalWPrei] = JaddPreUp(nssPreUp, JtotalWOPrei, preUpIn, probPreUpL, probPreUpR, probAllL, probAllR, statesInArry, data.Psi, data.EigenE, ...
+    [JtotalWPrei] = JaddPreUp(nssPreUp, JtotalWOPrei, preUpIn, probPreUpL, probPreUpR, probAllL, probAllR, statesInArray, data.Psi, data.EigenE, ...
                             data.xpoints, data.xres, data.Vcx, data.Mcx, data.Egx, Temper, phononnum);
     JtotalWPre(runIF) = JtotalWPrei;
     %}
@@ -4949,7 +4819,9 @@ end
 
 done = 0
 %save('JtotalWPre.txt','JtotalWPre','-ascii');
+
 save('JtotalWOPre.txt','JtotalWOPre','-ascii');
+%}
 
   
     
