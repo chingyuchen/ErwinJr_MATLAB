@@ -1,4 +1,4 @@
-function[FileName,PathName]= NameList(Option,Memoryfile,DialogTitle,FilterSpec,DefaultName)
+function [FileName,PathName] = NameList(Option, Memoryfile, DialogTitle, FilterSpec, DefaultName)
 %----------------------------------------------------------
 % Description:Function that implements uigetfile
 % and uiputfile with memory of last location of last
